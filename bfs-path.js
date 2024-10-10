@@ -8,11 +8,46 @@ function findNeighbors(node, matrix) {
     // Right
 
     // Your code here
+    const [row, col] = node;
+    let up = row - 1 >= 0 ? [row - 1, col] : null;
+    let down = row + 1 < matrix.length ? [row + 1, col] : null;
+    let left = col - 1 >= 0 ? [row, col - 1] : null;
+    let right = col + 1 < matrix[0].length ?[row, col + 1] : null;
+
+    return [up, down, left, right].filter(neighbor => neighbor !== null);
 }
 
 
 function bfsPath(matrix, startNode, endValue) {
     // Your code here
+    let visited = new Set();
+    let queue = [startNode];
+    let path = [];
+
+    while (queue.length) {
+        let node = queue.shift();
+        let [row, col] = node;
+        let value = matrix[row][col];
+
+        let nodeKey = `${row},${col}`;
+        if (visited.has(nodeKey)) continue;
+        visited.add(nodeKey);
+
+        path.push(node);
+
+        if (value === endValue) {
+            return path;
+        }
+
+        let neighbors = findNeighbors(node, matrix);
+        for (let neighbor of neighbors) {
+            let neighborKey = `${neighbor[0]},${neighbor[1]}`;
+            if (!visited.has(neighborKey)) {
+              queue.push(neighbor);
+            }
+        }
+    }
+    return false;
 }
 
 
